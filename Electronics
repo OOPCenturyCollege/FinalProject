@@ -1,0 +1,39 @@
+
+public class Electronics extends Item {
+	
+	private String company;
+	private String type;
+	
+	public Electronics(String itemName, String itemNumber, double price, double rating, String company, String type) {
+		super(itemName, itemNumber, price, rating);
+		this.company = company;
+		this.type = type;
+	}
+
+
+	public String getCompany() {
+		return company;
+	}
+
+
+	public void setCompany(String company) {
+		this.company = company;
+	}
+
+
+	public String getType() {
+		return type;
+	}
+
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+
+	@Override
+	public String toString() {
+		return super.toString() + ", Company = " + company + ", Type = " + type + "]";
+	}
+
+}
