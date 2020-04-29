@@ -1,3 +1,4 @@
+package FinalPackage1;
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
 
@@ -9,6 +10,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JLabel;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import javax.swing.JTextField;
 import java.awt.GridLayout;
@@ -20,29 +22,38 @@ import java.awt.Color;
 import javax.swing.JComboBox;
 import javax.swing.JScrollBar;
 import javax.swing.JCheckBox;
+import javax.swing.SwingConstants;
 
-public class shoppingGUI extends JFrame {
+public class shoppingGui extends JFrame {
 
+	private static final Items[][] Items = null;
 	private JPanel contentPane;
-	private JTextField textField;
-	private JTextField textField_1;
-
-	private Tops[] tops = {
-			new Tops("T-Shirt", 9.99, 1),
-			new Tops("Hoodie", 29.99, 1),
-			new Tops("Blouse", 19.99, 1)
+	private JTextField qtyTextField;
+	private JComboBox clothingCombo; 
+	private JComboBox electronicCombo; 
+	private JComboBox consumableCombo; 
+    private JTextArea output; 
+    private JTextField priceTextField;
+	private Cart cart = new Cart(20); 
+	private Items[] cartSummary = new Items[20]; 
+ 
+	private Clothing[] clothing = {
+			new Clothing("T-Shirt", 9.99),
+			new Clothing("Hoodie", 29.99),
+			new Clothing("Blouse", 19.99)
 			};
 	
-	private Bottoms[] bottoms = {
-			new Bottoms("Shorts", 10.50, 1),
-			new Bottoms("Jeans", 29.99, 1),
-			new Bottoms("Sweatpants", 9.99, 1)
+	private Electronics[] electronic = {
+			new Electronics("Tv", 1000.00),
+			new Electronics("Headphones", 19.99),
+			new Electronics("Iphone", 299.99)
 			};
 	
-	private Items[] items = {
-			new Items("Hat", 14.99, 1),
-			new Items("Sunglasses", 29.99, 1),
-			new Items("Belt", 7.99, 1)
+	
+	private Consumables[] consumable = {
+			new Consumables("Gummy worms", 2.99),
+			new Consumables("Beef Jerky", 5.99),
+			new Consumables("Apple Juice", 1.99)
 			};
 	
 	/**
@@ -52,7 +63,7 @@ public class shoppingGUI extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					shoppingGUI frame = new shoppingGUI();
+					shoppingGui frame = new shoppingGui();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -64,7 +75,7 @@ public class shoppingGUI extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public shoppingGUI() {
+	public shoppingGui() {
 		setTitle("Shopping Cart");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 722, 515);
@@ -72,28 +83,26 @@ public class shoppingGUI extends JFrame {
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
 		
-		JButton btnNewButton = new JButton("Home");
-		btnNewButton.addActionListener(new ActionListener() {
+		JButton btnNewButton_1 = new JButton("Account Info");
+		btnNewButton_1.setHorizontalAlignment(SwingConstants.RIGHT);
+		menuBar.add(btnNewButton_1);
+	
+		
+		JButton btnNewButton_3 = new JButton("Cart Summary");
+		btnNewButton_3.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				output.setText(" "); 
+				output.append(cart.toString() + "\n");
+				
+				
 			}
 		});
-		menuBar.add(btnNewButton);
-		
-		textField = new JTextField();
-		menuBar.add(textField);
-		textField.setColumns(10);
-		
-		JButton btnNewButton_4 = new JButton("Search");
-		menuBar.add(btnNewButton_4);
-		
-		JButton btnNewButton_3 = new JButton("Cart");
 		menuBar.add(btnNewButton_3);
 		
-		JButton btnNewButton_1 = new JButton("Account");
-		menuBar.add(btnNewButton_1);
-		
-		JButton btnNewButton_2 = new JButton("Wish List");
+		JButton btnNewButton_2 = new JButton("Logout");
 		menuBar.add(btnNewButton_2);
+		
+
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -106,46 +115,111 @@ public class shoppingGUI extends JFrame {
 		JPanel panel_2 = new JPanel();
 		panel_1.add(panel_2, BorderLayout.SOUTH);
 		
+		//JLabel lblNewLabel_2 = new JLabel("Price");
+		//panel_2.add(lblNewLabel_2);
+		
+		//priceTextField = new JTextField();
+		//panel_2.add(priceTextField);
+		//priceTextField.setColumns(10);
+		
 		JLabel lblNewLabel = new JLabel("Quantity");
 		panel_2.add(lblNewLabel);
 		
-		textField_1 = new JTextField();
-		panel_2.add(textField_1);
-		textField_1.setColumns(10);
 		
-		JButton btnNewButton_5 = new JButton("Add to Cart");
-		panel_2.add(btnNewButton_5);
+		
+		
+		qtyTextField = new JTextField();
+		panel_2.add(qtyTextField);
+		qtyTextField.setColumns(10);
+		
+
+		
+		class AddToCartListener implements ActionListener{ 
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Items selectedClothing = (Items) clothingCombo.getSelectedItem();
+				try {
+				int quantity = Integer.parseInt(qtyTextField.getText()); 
+				}catch(NumberFormatException e1){
+					e1.printStackTrace();
+				}
+				
+				int quantity = 0;
+				selectedClothing.setQuantity(quantity); 
+				cart.add(selectedClothing) ; 
+				output.append(selectedClothing.getName() + " has been added to your cart! \n"); 
+	
+				Electronics selectedElectronic = (Electronics) electronicCombo.getSelectedItem();
+				
+				selectedElectronic.setQuantity(quantity);
+				cart.add(selectedElectronic);  
+				output.append(selectedElectronic.getName()+ " has been added to your cart! \n");
+				
+		
+				Consumables selectedConsumable = (Consumables) consumableCombo.getSelectedItem(); 
+				
+				selectedConsumable.setQuantity(quantity); 
+				cart.add(selectedConsumable); 
+				output.append(selectedConsumable.getName() + " has been added to your cart! \n");
+	
+				
+				
+			}
+			 
+		}
+		
+		JButton addBtn = new JButton("Add ");
+		addBtn.addActionListener(new AddToCartListener()); 
+		panel_2.add(addBtn);
+		
+		
+		
+		JButton btnNewButton_4 = new JButton("Remove");
+		btnNewButton_4.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				 
+				
+			}
+		});
+		panel_2.add(btnNewButton_4);
+		
+	
 		
 		JPanel panel_3 = new JPanel();
 		panel_1.add(panel_3, BorderLayout.CENTER);
 		panel_3.setLayout(new GridLayout(0, 2, 0, 0));
 		
 		
-		JLabel lblNewLabel_7 = new JLabel("Tops");
+		JLabel lblNewLabel_7 = new JLabel("Clothings");
+		lblNewLabel_7.setHorizontalAlignment(SwingConstants.CENTER);
 		panel_3.add(lblNewLabel_7);
 		
-		JComboBox topsCombo = new JComboBox(tops);
-		panel_3.add(topsCombo);
+		clothingCombo = new JComboBox(clothing);
+		panel_3.add(clothingCombo);
 		
-		JLabel lblNewLabel_1 = new JLabel("Bottoms");
+		JLabel lblNewLabel_1 = new JLabel("Electronics");
+		lblNewLabel_1.setHorizontalAlignment(SwingConstants.CENTER);
 		panel_3.add(lblNewLabel_1);
 		
-		JComboBox bottomsCombo = new JComboBox(bottoms);
-		panel_3.add(bottomsCombo);
+		 electronicCombo = new JComboBox(electronic);
+		panel_3.add(electronicCombo);
 		
-		JLabel lblNewLabel_3 = new JLabel("Items");
+		JLabel lblNewLabel_3 = new JLabel("Consumables");
+		lblNewLabel_3.setHorizontalAlignment(SwingConstants.CENTER);
 		panel_3.add(lblNewLabel_3);
 		
-		JComboBox itemsCombo = new JComboBox(items);
-		panel_3.add(itemsCombo);
+		consumableCombo = new JComboBox(consumable);
+		panel_3.add(consumableCombo);
 		
 		JPanel panel = new JPanel();
 		panel.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "Console", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
 		contentPane.add(panel);
 		panel.setLayout(new BorderLayout(0, 0));
 		
-		JTextArea textArea = new JTextArea();
-		panel.add(textArea, BorderLayout.CENTER);
+	    output = new JTextArea();
+		panel.add(output, BorderLayout.CENTER);
 	}
 
 }
+
