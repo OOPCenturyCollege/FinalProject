@@ -21,6 +21,11 @@ import java.awt.GridLayout;
 import javax.swing.JTextPane;
 import javax.swing.JTextArea;
 import javax.swing.border.TitledBorder;
+
+import FinalPackage2.Clothing;
+import FinalPackage2.Consumables;
+import FinalPackage2.Electronics;
+
 import javax.swing.border.EtchedBorder;
 import java.awt.Color;
 import javax.swing.JComboBox;
@@ -28,7 +33,7 @@ import javax.swing.JScrollBar;
 import javax.swing.JCheckBox;
 import javax.swing.SwingConstants;
 
-public class shoppingGUI extends JFrame implements ActionListener, WindowListener {
+public class shoppingGui extends JFrame implements ActionListener, WindowListener {
 
 	private static final Items[][] Items = null;
 	private JPanel contentPane;
@@ -38,9 +43,8 @@ public class shoppingGUI extends JFrame implements ActionListener, WindowListene
 	private JComboBox consumableCombo; 
     private JTextArea output; 
     private JTextField priceTextField;
-	private Cart cart = new Cart(20); 
-	private Items[] cartSummary = new Items[20]; 
- 
+
+	//private Items[] cartSummary = new Items[20]; 
 	private Clothing[] clothing = {
 			new Clothing("T-Shirt", 9.99),
 			new Clothing("Hoodie", 29.99),
@@ -59,13 +63,17 @@ public class shoppingGUI extends JFrame implements ActionListener, WindowListene
 			new Consumables("Beef Jerky", 5.99),
 			new Consumables("Apple Juice", 1.99)
 			};
-		
+	private Customer[] customer = {
+			new Customer("John ", "Adams", "123 Happy Lane", "St. Paul", 
+					"MN", "JAdams@exmaple.com", 55123, 123456)
+	}; 
+	private Cart cart = new Cart(20); 	
 	
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					shoppingGUI frame = new shoppingGUI();
+					shoppingGui frame = new shoppingGui();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -109,7 +117,7 @@ public class shoppingGUI extends JFrame implements ActionListener, WindowListene
 	}
 	
 
-	public shoppingGUI() {
+	public shoppingGui() {
 		setTitle("Shopping Cart");
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		setBounds(100, 100, 722, 515);
@@ -118,6 +126,13 @@ public class shoppingGUI extends JFrame implements ActionListener, WindowListene
 		setJMenuBar(menuBar);
 		
 		JButton btnNewButton_1 = new JButton("Account Info");
+		btnNewButton_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				output.setText("");
+				output.append(customer[0] + "\n"); 
+				
+			}
+		});
 		btnNewButton_1.setHorizontalAlignment(SwingConstants.RIGHT);
 		menuBar.add(btnNewButton_1);
 	
@@ -126,15 +141,12 @@ public class shoppingGUI extends JFrame implements ActionListener, WindowListene
 		btnNewButton_3.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				output.setText(" "); 
-				output.append(cart.toString() + "\n");
+				output.setText(cart.toString());
 				
 				
 			}
 		});
 		menuBar.add(btnNewButton_3);
-		
-		JButton btnNewButton_2 = new JButton("Logout");
-		menuBar.add(btnNewButton_2);
 		
 
 		contentPane = new JPanel();
@@ -149,12 +161,6 @@ public class shoppingGUI extends JFrame implements ActionListener, WindowListene
 		JPanel panel_2 = new JPanel();
 		panel_1.add(panel_2, BorderLayout.SOUTH);
 		
-		//JLabel lblNewLabel_2 = new JLabel("Price");
-		//panel_2.add(lblNewLabel_2);
-		
-		//priceTextField = new JTextField();
-		//panel_2.add(priceTextField);
-		//priceTextField.setColumns(10);
 		
 		JLabel lblNewLabel = new JLabel("Quantity");
 		panel_2.add(lblNewLabel);
@@ -175,11 +181,7 @@ public class shoppingGUI extends JFrame implements ActionListener, WindowListene
 				Items selectedClothing = (Items) clothingCombo.getSelectedItem();
 				try {
 				int quantity = Integer.parseInt(qtyTextField.getText()); 
-				}catch(NumberFormatException e1){
-					e1.printStackTrace();
-				}
 				
-				int quantity = 0;
 				selectedClothing.setQuantity(quantity); 
 				cart.add(selectedClothing) ; 
 				output.append(selectedClothing.getName() + " has been added to your cart! \n"); 
@@ -198,6 +200,12 @@ public class shoppingGUI extends JFrame implements ActionListener, WindowListene
 				output.append(selectedConsumable.getName() + " has been added to your cart! \n");
 	
 				
+				}catch(NumberFormatException e1){
+					e1.printStackTrace();
+				}
+				
+				
+				
 				
 			}
 			 
@@ -212,7 +220,7 @@ public class shoppingGUI extends JFrame implements ActionListener, WindowListene
 		JButton btnNewButton_4 = new JButton("Remove");
 		btnNewButton_4.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				 
+				 output.setText("");
 				
 			}
 		});
