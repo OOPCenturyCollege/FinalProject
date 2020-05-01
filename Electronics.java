@@ -1,5 +1,6 @@
+package FinalPackage2;
 
-package FinalPackage1;
+import FinalPackage1.Items;
 
 public class Electronics extends Items {
 	private double price;
@@ -19,9 +20,10 @@ public class Electronics extends Items {
 	
 	@Override
 	public String toString() {
-		return name + " price=" + price + ", quantity=" +"]";
+		return name + " [price=" + price +"]";
 	} 
 	
 	
 
 }
+
