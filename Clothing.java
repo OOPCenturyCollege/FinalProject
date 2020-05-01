@@ -1,9 +1,11 @@
-package FinalPackage1;
+package FinalPackage2;
 
-public class Clothing extends Items{
-	private double price;
+import FinalPackage1.Items;
 
-	public Clothing(String name, double price) {
+public class Consumables extends Items {
+	private double price; 
+	
+	public Consumables(String name, double price) {
 		super(name, price);
 		this.price = price;
 
@@ -17,10 +19,12 @@ public class Clothing extends Items{
 	
 	@Override
 	public String toString() {
-		return  name + "[ price=" + price + ", quantity=" + "]";
+		return  name + "[ price=" + price + "]";
 	} 
+	
+	
+	
 	
 	
 
 }
-
