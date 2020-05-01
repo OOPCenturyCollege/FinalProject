@@ -184,7 +184,7 @@ public class shoppingGui extends JFrame implements ActionListener, WindowListene
 				
 				selectedClothing.setQuantity(quantity); 
 				cart.add(selectedClothing) ; 
-				output.append(selectedClothing.getName() + " has been added to your cart! \n"); 
+				output.append("\n" +selectedClothing.getName() + " has been added to your cart! \n"); 
 	
 				Electronics selectedElectronic = (Electronics) electronicCombo.getSelectedItem();
 				
