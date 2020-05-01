@@ -1,6 +1,8 @@
 package FinalPackage1;
+
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
+import java.awt.FlowLayout;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -10,6 +12,8 @@ import javax.swing.JMenuBar;
 import javax.swing.JLabel;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import javax.swing.JTextField;
@@ -24,7 +28,7 @@ import javax.swing.JScrollBar;
 import javax.swing.JCheckBox;
 import javax.swing.SwingConstants;
 
-public class shoppingGui extends JFrame {
+public class shoppingGUI extends JFrame implements ActionListener, WindowListener {
 
 	private static final Items[][] Items = null;
 	private JPanel contentPane;
@@ -55,15 +59,13 @@ public class shoppingGui extends JFrame {
 			new Consumables("Beef Jerky", 5.99),
 			new Consumables("Apple Juice", 1.99)
 			};
+		
 	
-	/**
-	 * Launch the application.
-	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					shoppingGui frame = new shoppingGui();
+					shoppingGUI frame = new shoppingGUI();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -72,14 +74,46 @@ public class shoppingGui extends JFrame {
 		});
 	}
 
-	/**
-	 * Create the frame.
-	 */
-	public shoppingGui() {
-		setTitle("Shopping Cart");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 722, 515);
+	//exit pop up window
+	private class confirmExit extends JFrame implements ActionListener{
+		private JLabel lbl = new JLabel("Do you want to exit?");
+		private JButton cancelButton = new JButton("Cancel");
+		private JButton okButton = new JButton("Exit");
 		
+		
+		public confirmExit(String title) {
+			super(title);
+			setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			setSize(200,100);
+			setLayout(new FlowLayout());
+			
+			okButton.addActionListener(this);
+			cancelButton.addActionListener(this);
+			add(lbl);
+			add(cancelButton);
+			add(okButton);
+		}
+
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			String callingBtn = e.getActionCommand();
+			if (callingBtn.equalsIgnoreCase("cancel")) {
+				dispose();
+			}
+			else if (callingBtn.equalsIgnoreCase("exit")) {
+				System.exit(0);
+			}
+			
+		}
+	}
+	
+
+	public shoppingGUI() {
+		setTitle("Shopping Cart");
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		setBounds(100, 100, 722, 515);
+		setListener();
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
 		
@@ -221,5 +255,67 @@ public class shoppingGui extends JFrame {
 		panel.add(output, BorderLayout.CENTER);
 	}
 
-}
 
+	//window listener
+	private void setListener() {
+		addWindowListener(this);
+		
+	}
+
+	//window status
+	@Override
+	public void windowOpened(WindowEvent e) {
+		System.out.println("shoppingGUI.windowOpened()");
+		
+	}
+
+
+	@Override
+	public void windowClosing(WindowEvent e) {
+		System.out.println("shoppingGUI.windowClosing()");
+		confirmExit exitframe = new confirmExit("Confirm Exit");
+		exitframe.setVisible(true);
+	}
+
+
+	@Override
+	public void windowClosed(WindowEvent e) {
+		System.out.println("shoppingGUI.windowClosed()");
+		
+	}
+
+
+	@Override
+	public void windowIconified(WindowEvent e) {
+		System.out.println("shoppingGUI.windowIconified()");
+		
+	}
+
+
+	@Override
+	public void windowDeiconified(WindowEvent e) {
+		System.out.println("shoppingGUI.windowDeiconified()");
+		
+	}
+
+
+	@Override
+	public void windowActivated(WindowEvent e) {
+		System.out.println("shoppingGUI.windowActivated()");
+		
+	}
+
+
+	@Override
+	public void windowDeactivated(WindowEvent e) {
+		System.out.println("shoppingGUI.windowDeactivated()");
+		
+	}
+
+	
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		
+	}
+
+}
