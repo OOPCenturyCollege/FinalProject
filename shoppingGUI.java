@@ -1,5 +1,9 @@
 package FinalPackage1;
 
+import FinalPackage2.Clothing;
+import FinalPackage2.Consumables;
+import FinalPackage2.Electronics;
+
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.awt.FlowLayout;
@@ -7,66 +11,74 @@ import java.awt.FlowLayout;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-import javax.swing.JToolBar;
 import javax.swing.JMenuBar;
 import javax.swing.JLabel;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import javax.swing.JTextField;
 import java.awt.GridLayout;
-import javax.swing.JTextPane;
 import javax.swing.JTextArea;
 import javax.swing.border.TitledBorder;
-
-import FinalPackage2.Clothing;
-import FinalPackage2.Consumables;
-import FinalPackage2.Electronics;
-
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.border.EtchedBorder;
 import java.awt.Color;
 import javax.swing.JComboBox;
-import javax.swing.JScrollBar;
-import javax.swing.JCheckBox;
 import javax.swing.SwingConstants;
+import javax.swing.JSpinner;
+import javax.swing.SpinnerNumberModel;
+import java.awt.Font;
 
-public class shoppingGui extends JFrame implements ActionListener, WindowListener {
+public class shoppingGui extends JFrame implements WindowListener {
 
 	private static final Items[][] Items = null;
-	private JPanel contentPane;
-	private JTextField qtyTextField;
+	private JPanel overallPanel;
 	private JComboBox clothingCombo; 
 	private JComboBox electronicCombo; 
 	private JComboBox consumableCombo; 
     private JTextArea output; 
     private JTextField priceTextField;
 
-	//private Items[] cartSummary = new Items[20]; 
+    
+    //clothing info
 	private Clothing[] clothing = {
-			new Clothing("T-Shirt", 9.99),
-			new Clothing("Hoodie", 29.99),
-			new Clothing("Blouse", 19.99)
+			new Clothing("White T-Shirt", 9.99),
+			new Clothing("Black Hoodie", 29.99),
+			new Clothing("Red Blouse", 19.99),
+			new Clothing("Denim Jeans", 9.99),
+			new Clothing("Rain Jacket", 29.99),
+			new Clothing("Gray Sweatpants", 19.99)
 			};
 	
+	//electronics info
 	private Electronics[] electronic = {
-			new Electronics("Tv", 1000.00),
-			new Electronics("Headphones", 19.99),
-			new Electronics("Iphone", 299.99)
+			new Electronics("Smart TV", 1499.99),
+			new Electronics("Headphones", 39.99),
+			new Electronics("iPhone", 399.99),
+			new Electronics("Slim Laptop", 599.99),
+			new Electronics("Earbuds", 34.99),
+			new Electronics("Wired Mouse", 19.99)
 			};
 	
-	
+	//consumable info
 	private Consumables[] consumable = {
-			new Consumables("Gummy worms", 2.99),
+			new Consumables("Gummy Worms", 2.99),
 			new Consumables("Beef Jerky", 5.99),
-			new Consumables("Apple Juice", 1.99)
+			new Consumables("Apple Juice", 1.99),
+			new Consumables("Chocolate Bar", 0.99),
+			new Consumables("Ramen Noodles", 0.24),
+			new Consumables("Frozen Pizza", 4.99)
 			};
+	
+	//customer info
 	private Customer[] customer = {
 			new Customer("John ", "Adams", "123 Happy Lane", "St. Paul", 
 					"MN", "JAdams@exmaple.com", 55123, 123456)
 	}; 
+	
 	private Cart cart = new Cart(20); 	
 	
 	public static void main(String[] args) {
@@ -83,16 +95,14 @@ public class shoppingGui extends JFrame implements ActionListener, WindowListene
 	}
 
 	//exit pop up window
-	private class confirmExit extends JFrame implements ActionListener{
-		private JLabel lbl = new JLabel("Do you want to exit?");
-		private JButton cancelButton = new JButton("Cancel");
+	private class confirmExit extends JFrame implements ActionListener {
+		private JLabel lbl = new JLabel("Are you sure you want to exit?");
 		private JButton okButton = new JButton("Exit");
-		
-		
+		private JButton cancelButton = new JButton("Cancel");
 		public confirmExit(String title) {
 			super(title);
 			setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-			setSize(200,100);
+			setSize(250,110);
 			setLayout(new FlowLayout());
 			
 			okButton.addActionListener(this);
@@ -101,8 +111,6 @@ public class shoppingGui extends JFrame implements ActionListener, WindowListene
 			add(cancelButton);
 			add(okButton);
 		}
-
-
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			String callingBtn = e.getActionCommand();
@@ -112,218 +120,272 @@ public class shoppingGui extends JFrame implements ActionListener, WindowListene
 			else if (callingBtn.equalsIgnoreCase("exit")) {
 				System.exit(0);
 			}
-			
 		}
 	}
 	
 
 	public shoppingGui() {
-		setTitle("Shopping Cart");
+		//title
+		setTitle("Shop.com Express App");
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		setBounds(100, 100, 722, 515);
+		//app size
+		setBounds(100, 100, 813, 515);
 		setListener();
+		
+	//menubar
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
 		
-		JButton btnNewButton_1 = new JButton("Account Info");
-		btnNewButton_1.addActionListener(new ActionListener() {
+	//accountinfo
+		JButton accountInfoBtn = new JButton("Account Info");
+		accountInfoBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				output.setText("");
 				output.append(customer[0] + "\n"); 
-				
 			}
 		});
-		btnNewButton_1.setHorizontalAlignment(SwingConstants.RIGHT);
-		menuBar.add(btnNewButton_1);
-	
+		accountInfoBtn.setHorizontalAlignment(SwingConstants.RIGHT);
+		menuBar.add(accountInfoBtn);
+		JPanel panel_4 = new JPanel();
+		menuBar.add(panel_4);
+		JLabel lblNewLabel_1 = new JLabel("Welcome to Shop.com! ");
+		lblNewLabel_1.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 14));
+		panel_4.add(lblNewLabel_1);
 		
-		JButton btnNewButton_3 = new JButton("Cart Summary");
-		btnNewButton_3.addActionListener(new ActionListener() {
+		
+		//!!!need to fix!!!
+	//cart summary
+		JButton cartSumBtn = new JButton("Cart Summary");
+		cartSumBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				output.setText(" "); 
 				output.setText(cart.toString());
-				
-				
 			}
 		});
-		menuBar.add(btnNewButton_3);
+		menuBar.add(cartSumBtn);
 		
-
-		contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		setContentPane(contentPane);
-		contentPane.setLayout(new GridLayout(2, 2, 0, 0));
-		
-		JPanel panel_1 = new JPanel();
-		contentPane.add(panel_1);
-		panel_1.setLayout(new BorderLayout(0, 0));
-		
-		JPanel panel_2 = new JPanel();
-		panel_1.add(panel_2, BorderLayout.SOUTH);
-		
-		
-		JLabel lblNewLabel = new JLabel("Quantity");
-		panel_2.add(lblNewLabel);
-		
-		
-		
-		
-		qtyTextField = new JTextField();
-		panel_2.add(qtyTextField);
-		qtyTextField.setColumns(10);
-		
-
-		
-		class AddToCartListener implements ActionListener{ 
-			
-			@Override
+		//!!!needs to add in code to clear cart!!!
+	//clear cart button
+		JButton clearBtn = new JButton("Clear Cart");
+		clearBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Items selectedClothing = (Items) clothingCombo.getSelectedItem();
-				try {
-				int quantity = Integer.parseInt(qtyTextField.getText()); 
-				
-				selectedClothing.setQuantity(quantity); 
-				cart.add(selectedClothing) ; 
-				output.append("\n" +selectedClothing.getName() + " has been added to your cart! \n"); 
-	
-				Electronics selectedElectronic = (Electronics) electronicCombo.getSelectedItem();
-				
-				selectedElectronic.setQuantity(quantity);
-				cart.add(selectedElectronic);  
-				output.append(selectedElectronic.getName()+ " has been added to your cart! \n");
-				
-		
-				Consumables selectedConsumable = (Consumables) consumableCombo.getSelectedItem(); 
-				
-				selectedConsumable.setQuantity(quantity); 
-				cart.add(selectedConsumable); 
-				output.append(selectedConsumable.getName() + " has been added to your cart! \n");
-	
-				
-				}catch(NumberFormatException e1){
-					e1.printStackTrace();
-				}
-				
-				
-				
-				
-			}
-			 
-		}
-		
-		JButton addBtn = new JButton("Add ");
-		addBtn.addActionListener(new AddToCartListener()); 
-		panel_2.add(addBtn);
-		
-		
-		
-		JButton btnNewButton_4 = new JButton("Remove");
-		btnNewButton_4.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				 output.setText("");
-				
+				output.setText("Cart cleared!");
 			}
 		});
-		panel_2.add(btnNewButton_4);
+		menuBar.add(clearBtn);
 		
-	
+
+		overallPanel = new JPanel();
+		overallPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setContentPane(overallPanel);
+		overallPanel.setLayout(new GridLayout(2, 2, 0, 0));
+		JPanel topPanel = new JPanel();
+		overallPanel.add(topPanel);
+		topPanel.setLayout(new BorderLayout(0, 0));
+		JPanel mainPanel = new JPanel();
+		topPanel.add(mainPanel, BorderLayout.CENTER);
+		mainPanel.setLayout(new GridLayout(0, 4, 0, 0));
 		
-		JPanel panel_3 = new JPanel();
-		panel_1.add(panel_3, BorderLayout.CENTER);
-		panel_3.setLayout(new GridLayout(0, 2, 0, 0));
 		
 		
-		JLabel lblNewLabel_7 = new JLabel("Clothings");
-		lblNewLabel_7.setHorizontalAlignment(SwingConstants.CENTER);
-		panel_3.add(lblNewLabel_7);
+	//clothing
+		JLabel clothingLabel = new JLabel("Clothing");
+		clothingLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		mainPanel.add(clothingLabel);
 		
 		clothingCombo = new JComboBox(clothing);
-		panel_3.add(clothingCombo);
+		clothingCombo.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e) {
+		        System.out.println("clothing item selected");
+		        }
+			});
+		mainPanel.add(clothingCombo);
 		
-		JLabel lblNewLabel_1 = new JLabel("Electronics");
-		lblNewLabel_1.setHorizontalAlignment(SwingConstants.CENTER);
-		panel_3.add(lblNewLabel_1);
+		//quantity spinner panel
+		JPanel cloQuanPan = new JPanel();
+		mainPanel.add(cloQuanPan);
+		cloQuanPan.setLayout(null);
+		JSpinner cloSpinner = new JSpinner();
+		cloSpinner.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(1)));
+		//actionlistener for jspinner
+		cloSpinner.addChangeListener(new ChangeListener() {      
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				System.out.println("clothing quantity changed");
+			}
+			});
+		cloSpinner.setBounds(145, 0, 51, 62);
+		cloQuanPan.add(cloSpinner);
 		
-		 electronicCombo = new JComboBox(electronic);
-		panel_3.add(electronicCombo);
+		//add button
+		JButton cloAddBtn = new JButton("Add to cart");
+		cloAddBtn.addActionListener(new ActionListener () {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				System.out.println("add button clicked");
+				try {
+				int quantity = (Integer) cloSpinner.getValue(); 
+				Consumables selectedConsumable = (Consumables) consumableCombo.getSelectedItem(); 
+				selectedConsumable.setQuantity(quantity); 
+				cart.add(selectedConsumable); 
+				output.append(quantity +" " + selectedConsumable.getName() +  " has been added to your cart! \n");
+				}catch(Exception e1){
+					e1.printStackTrace();
+				}	
+			}
+		});
+		mainPanel.add(cloAddBtn);
+	
 		
-		JLabel lblNewLabel_3 = new JLabel("Consumables");
-		lblNewLabel_3.setHorizontalAlignment(SwingConstants.CENTER);
-		panel_3.add(lblNewLabel_3);
+		
+	//electronics
+		JLabel ElectronicsLbl = new JLabel("Electronics");
+		ElectronicsLbl.setHorizontalAlignment(SwingConstants.CENTER);
+		mainPanel.add(ElectronicsLbl);
+		
+		electronicCombo = new JComboBox(electronic);
+		electronicCombo.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e) {
+		        System.out.println("electronic item selected");
+		        Electronics selectedElectronic = (Electronics) electronicCombo.getSelectedItem();
+
+		        }
+			});
+		mainPanel.add(electronicCombo);
+		
+		//quantity spinner panel
+		JPanel elecQuanPan = new JPanel();
+		elecQuanPan.setLayout(null);
+		mainPanel.add(elecQuanPan);
+		
+		JSpinner elecSpinner = new JSpinner();
+		elecSpinner.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(1)));
+		elecSpinner.addChangeListener(new ChangeListener() {      
+			  @Override
+			  public void stateChanged(ChangeEvent e) {
+			   System.out.println("electronics quantity changed");
+			  }
+			});
+	
+		elecSpinner.setBounds(145, 0, 51, 62);
+		elecQuanPan.add(elecSpinner);
+		
+		//add button
+		JButton elecAddBtn = new JButton("Add to cart");
+		elecAddBtn.addActionListener(new ActionListener () {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				System.out.println("add button clicked");
+				try {
+				int quantity = (Integer) elecSpinner.getValue(); 
+				Consumables selectedConsumable = (Consumables) consumableCombo.getSelectedItem(); 
+				selectedConsumable.setQuantity(quantity); 
+				cart.add(selectedConsumable); 
+				output.append(quantity +" " + selectedConsumable.getName() +  " has been added to your cart! \n");
+				}catch(Exception e1){
+					e1.printStackTrace();
+				}	
+			}
+		});
+		mainPanel.add(elecAddBtn);
+		
+		
+		
+	//consumables
+		JLabel consumablesLbl = new JLabel("Consumables");
+		consumablesLbl.setHorizontalAlignment(SwingConstants.CENTER);
+		mainPanel.add(consumablesLbl);
 		
 		consumableCombo = new JComboBox(consumable);
-		panel_3.add(consumableCombo);
+		consumableCombo.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e) {
+		        System.out.println("consumable item selected");
+		        }
+			});
+		mainPanel.add(consumableCombo);
 		
-		JPanel panel = new JPanel();
-		panel.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "Console", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
-		contentPane.add(panel);
-		panel.setLayout(new BorderLayout(0, 0));
+		//quantity spinner panel
+		JPanel conQuanPan = new JPanel();
+		conQuanPan.setLayout(null);
+		mainPanel.add(conQuanPan);
+		JSpinner conSpinner = new JSpinner();
+		conSpinner.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(1)));
+		conSpinner.addChangeListener(new ChangeListener() {      
+				@Override
+				public void stateChanged(ChangeEvent e) { 
+					System.out.println("consumables quantity changed");
+				}
+				});
+		conSpinner.setBounds(145, 0, 51, 62);
+		conQuanPan.add(conSpinner);
 		
+		//add button
+		JButton conAddBtn = new JButton("Add to cart");
+		conAddBtn.addActionListener(new ActionListener () {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				System.out.println("add button clicked");
+				try {
+				int quantity = (Integer) conSpinner.getValue(); 
+				Consumables selectedConsumable = (Consumables) consumableCombo.getSelectedItem(); 
+				selectedConsumable.setQuantity(quantity); 
+				cart.add(selectedConsumable); 
+				output.append(quantity +" " + selectedConsumable.getName() +  " has been added to your cart! \n");
+				}catch(Exception e1){
+					e1.printStackTrace();
+				}	
+			}
+		});
+		mainPanel.add(conAddBtn);
+		
+	//console
+		JPanel bottomPanel = new JPanel();
+		bottomPanel.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "Console", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+		overallPanel.add(bottomPanel);
+		bottomPanel.setLayout(new BorderLayout(0, 0));
 	    output = new JTextArea();
-		panel.add(output, BorderLayout.CENTER);
+	    output.setEditable(false);
+		bottomPanel.add(output, BorderLayout.CENTER);
 	}
 
 
+	
 	//window listener
 	private void setListener() {
 		addWindowListener(this);
-		
 	}
-
 	//window status
 	@Override
 	public void windowOpened(WindowEvent e) {
 		System.out.println("shoppingGUI.windowOpened()");
-		
 	}
-
-
 	@Override
 	public void windowClosing(WindowEvent e) {
 		System.out.println("shoppingGUI.windowClosing()");
 		confirmExit exitframe = new confirmExit("Confirm Exit");
 		exitframe.setVisible(true);
 	}
-
-
 	@Override
 	public void windowClosed(WindowEvent e) {
 		System.out.println("shoppingGUI.windowClosed()");
-		
 	}
-
-
 	@Override
 	public void windowIconified(WindowEvent e) {
 		System.out.println("shoppingGUI.windowIconified()");
-		
 	}
-
-
 	@Override
 	public void windowDeiconified(WindowEvent e) {
 		System.out.println("shoppingGUI.windowDeiconified()");
-		
 	}
-
-
 	@Override
 	public void windowActivated(WindowEvent e) {
 		System.out.println("shoppingGUI.windowActivated()");
-		
 	}
-
-
 	@Override
 	public void windowDeactivated(WindowEvent e) {
 		System.out.println("shoppingGUI.windowDeactivated()");
-		
 	}
-
-	
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		
-	}
-
 }
