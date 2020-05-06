@@ -13,18 +13,6 @@ public class Cart {
 		items[itemsCount++] = i;
 	}
 
-	public boolean removeItem(Items r) {
-		for (int i = 0; i < itemsCount; i++) {
-			if (items[i] != null && items[i].equals(r)) {
-				items[i] = items[itemsCount - 1];
-				itemsCount--;
-				return true;
-			}
-
-		}
-
-		return false;
-	}
 
 	public Items[] getItems() {
 		return items;
