@@ -1,8 +1,4 @@
-package FinalPackage1;
-
-import FinalPackage2.Clothing;
-import FinalPackage2.Consumables;
-import FinalPackage2.Electronics;
+package FinalPackage2;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
@@ -17,13 +13,22 @@ import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
 import java.awt.event.ActionEvent;
-import javax.swing.JTextField;
 import java.awt.GridLayout;
 import javax.swing.JTextArea;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+
 import javax.swing.border.EtchedBorder;
 import java.awt.Color;
 import javax.swing.JComboBox;
@@ -34,43 +39,46 @@ import java.awt.Font;
 
 public class shoppingGui extends JFrame implements WindowListener {
 
-	private static final Items[][] Items = null;
+	private static final int NAME = 0;
+	private static final int PRICE = 1;
+	private static final int QUANTITY = 2;
+	private static List<Items> products = new ArrayList<>();
+	
 	private JPanel overallPanel;
 	private JComboBox clothingCombo; 
 	private JComboBox electronicCombo; 
 	private JComboBox consumableCombo; 
     private JTextArea output; 
-    private JTextField priceTextField;
-
+    
     
     //clothing info
 	private Clothing[] clothing = {
-			new Clothing("White T-Shirt", 9.99),
-			new Clothing("Black Hoodie", 29.99),
-			new Clothing("Red Blouse", 19.99),
-			new Clothing("Denim Jeans", 9.99),
-			new Clothing("Rain Jacket", 29.99),
-			new Clothing("Gray Sweatpants", 19.99)
+			new Clothing("White T-Shirt", 9.99, 0),
+			new Clothing("Black Hoodie", 29.99, 0),
+			new Clothing("Red Blouse", 19.99, 0),
+			new Clothing("Denim Jeans", 9.99, 0),
+			new Clothing("Rain Jacket", 29.99, 0),
+			new Clothing("Gray Sweatpants", 19.99, 0)
 			};
 	
 	//electronics info
 	private Electronics[] electronic = {
-			new Electronics("Smart TV", 1499.99),
-			new Electronics("Headphones", 39.99),
-			new Electronics("iPhone", 399.99),
-			new Electronics("Slim Laptop", 599.99),
-			new Electronics("Earbuds", 34.99),
-			new Electronics("Wired Mouse", 19.99)
+			new Electronics("Smart TV", 1499.99, 0),
+			new Electronics("Headphones", 39.99, 0),
+			new Electronics("iPhone", 399.99, 0),
+			new Electronics("Slim Laptop", 599.99, 0),
+			new Electronics("Earbuds", 34.99, 0),
+			new Electronics("Wired Mouse", 19.99, 0)
 			};
 	
 	//consumable info
 	private Consumables[] consumable = {
-			new Consumables("Gummy Worms", 2.99),
-			new Consumables("Beef Jerky", 5.99),
-			new Consumables("Apple Juice", 1.99),
-			new Consumables("Chocolate Bar", 0.99),
-			new Consumables("Ramen Noodles", 0.24),
-			new Consumables("Frozen Pizza", 4.99)
+			new Consumables("Gummy Worms", 2.99, 0),
+			new Consumables("Beef Jerky", 5.99, 0),
+			new Consumables("Apple Juice", 1.99, 0),
+			new Consumables("Chocolate Bar", 0.99, 0),
+			new Consumables("Ramen Noodles", 0.24, 0),
+			new Consumables("Frozen Pizza", 4.99, 0)
 			};
 	
 	//customer info
@@ -82,6 +90,7 @@ public class shoppingGui extends JFrame implements WindowListener {
 	private Cart cart = new Cart(20); 	
 	
 	public static void main(String[] args) {
+		writeToFile();
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -94,6 +103,50 @@ public class shoppingGui extends JFrame implements WindowListener {
 		});
 	}
 
+	//creates txt for cart data
+	public static void writeToFile() {
+		try {
+			System.out.println("Creating cartData.txt");
+			PrintWriter pw = new PrintWriter(new FileOutputStream("cartData.txt", true));
+			pw.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	//reads cartdata txt
+	public static void readFromFile() {
+		try {
+			Scanner file = new Scanner(new FileInputStream("cartData.txt"));
+
+			while (file.hasNextLine()) {
+				String line = file.nextLine(); // read the line ""
+				// convert each line to a product a object
+				String[] productStr = line.split(", "); // "
+
+				String name = productStr[NAME];
+				double price = Double.parseDouble(productStr[PRICE]);
+				int quantity = Integer.parseInt(productStr[QUANTITY]);
+
+				Items product = new Items(name, price, quantity);
+				products.add(product); 
+			}
+			displayProducts();
+			file.close();
+		} catch (FileNotFoundException e) {
+			System.out.println(e.getMessage());
+		}
+	}
+	
+	public static void displayProducts() {
+		for (Items product : products) {
+			System.out.println(product);
+
+		}
+	}
+	
+	
+	
 	//exit pop up window
 	private class confirmExit extends JFrame implements ActionListener {
 		private JLabel lbl = new JLabel("Are you sure you want to exit?");
@@ -123,7 +176,8 @@ public class shoppingGui extends JFrame implements WindowListener {
 		}
 	}
 	
-
+	
+	
 	public shoppingGui() {
 		//title
 		setTitle("Shop.com Express App");
@@ -153,23 +207,37 @@ public class shoppingGui extends JFrame implements WindowListener {
 		panel_4.add(lblNewLabel_1);
 		
 		
-		//!!!need to fix!!!
+		//!!!!
 	//cart summary
 		JButton cartSumBtn = new JButton("Cart Summary");
+		readFromFile();
 		cartSumBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+								
+				//for (Items product : products) {
+					//output.append(product.toString() +"\n");
+				//}
 				output.setText(" "); 
 				output.setText(cart.toString());
 			}
 		});
 		menuBar.add(cartSumBtn);
 		
-		//!!!needs to add in code to clear cart!!!
+		
+		
+
 	//clear cart button
 		JButton clearBtn = new JButton("Clear Cart");
 		clearBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				output.setText("Cart cleared!");
+				try {
+					PrintWriter pw = new PrintWriter("cartData.txt");
+					pw.print("cleared!");
+					pw.close();
+				} catch (FileNotFoundException e1) {
+					e1.printStackTrace();
+				}
+				output.setText("Cart cleared!\n");
 			}
 		});
 		menuBar.add(clearBtn);
@@ -190,6 +258,7 @@ public class shoppingGui extends JFrame implements WindowListener {
 		
 	//clothing
 		JLabel clothingLabel = new JLabel("Clothing");
+		clothingLabel.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		clothingLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		mainPanel.add(clothingLabel);
 		
@@ -215,7 +284,7 @@ public class shoppingGui extends JFrame implements WindowListener {
 				System.out.println("clothing quantity changed");
 			}
 			});
-		cloSpinner.setBounds(145, 0, 51, 62);
+		cloSpinner.setBounds(145, 0, 51, 72);
 		cloQuanPan.add(cloSpinner);
 		
 		//add button
@@ -223,14 +292,22 @@ public class shoppingGui extends JFrame implements WindowListener {
 		cloAddBtn.addActionListener(new ActionListener () {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				System.out.println("add button clicked");
+				
 				try {
 				int quantity = (Integer) cloSpinner.getValue(); 
 				Clothing selectedClothing = (Clothing) clothingCombo.getSelectedItem(); 
 				selectedClothing.setQuantity(quantity); 
 				cart.add(selectedClothing); 
+				if(quantity<=0) {
+					output.append("Quantity is set to zero! Nothing added to cart \n");
+					System.out.println("nothing added to cart!");
+				} else {
+				System.out.println("cart add button clicked");
 				output.append(quantity +" " + selectedClothing.getName() +  " has been added to your cart! \n");
-				}catch(Exception e1){
+				PrintWriter pw1 = new PrintWriter(new FileOutputStream("cartData.txt", true));
+				pw1.println(clothingCombo.getSelectedItem() +", " + quantity);
+				pw1.close();
+				}}catch(Exception e1){
 					e1.printStackTrace();
 				}	
 			}
@@ -241,6 +318,7 @@ public class shoppingGui extends JFrame implements WindowListener {
 		
 	//electronics
 		JLabel ElectronicsLbl = new JLabel("Electronics");
+		ElectronicsLbl.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		ElectronicsLbl.setHorizontalAlignment(SwingConstants.CENTER);
 		mainPanel.add(ElectronicsLbl);
 		
@@ -250,7 +328,6 @@ public class shoppingGui extends JFrame implements WindowListener {
 			public void actionPerformed(ActionEvent e) {
 		        System.out.println("electronic item selected");
 		        Electronics selectedElectronic = (Electronics) electronicCombo.getSelectedItem();
-
 		        }
 			});
 		mainPanel.add(electronicCombo);
@@ -269,7 +346,7 @@ public class shoppingGui extends JFrame implements WindowListener {
 			  }
 			});
 	
-		elecSpinner.setBounds(145, 0, 51, 62);
+		elecSpinner.setBounds(145, 0, 51, 72);
 		elecQuanPan.add(elecSpinner);
 		
 		//add button
@@ -277,14 +354,22 @@ public class shoppingGui extends JFrame implements WindowListener {
 		elecAddBtn.addActionListener(new ActionListener () {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				System.out.println("add button clicked");
+				System.out.println("electronics add button clicked");
 				try {
-				int quantity = (Integer) elecSpinner.getValue(); 
+				int quantity2 = (Integer) elecSpinner.getValue(); 
 				Electronics selectedElectronic = (Electronics) electronicCombo.getSelectedItem(); 
-				selectedElectronic.setQuantity(quantity); 
+				selectedElectronic.setQuantity(quantity2); 
 				cart.add(selectedElectronic); 
-				output.append(quantity +" " + selectedElectronic.getName() +  " has been added to your cart! \n");
-				}catch(Exception e1){
+				if(quantity2<=0) {
+					output.append("Quantity is set to zero! Nothing added to cart \n");
+					System.out.println("nothing added to cart!");
+				} else {
+				System.out.println("cart add button clicked");
+				output.append(quantity2 +" " + selectedElectronic.getName() +  " has been added to your cart! \n");
+				PrintWriter pw2 = new PrintWriter(new FileOutputStream("cartData.txt", true));
+				pw2.println(electronicCombo.getSelectedItem() +", " + quantity2);
+				pw2.close();
+				}}catch(Exception e1){
 					e1.printStackTrace();
 				}	
 			}
@@ -295,6 +380,7 @@ public class shoppingGui extends JFrame implements WindowListener {
 		
 	//consumables
 		JLabel consumablesLbl = new JLabel("Consumables");
+		consumablesLbl.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		consumablesLbl.setHorizontalAlignment(SwingConstants.CENTER);
 		mainPanel.add(consumablesLbl);
 		
@@ -319,7 +405,7 @@ public class shoppingGui extends JFrame implements WindowListener {
 					System.out.println("consumables quantity changed");
 				}
 				});
-		conSpinner.setBounds(145, 0, 51, 62);
+		conSpinner.setBounds(145, 0, 51, 72);
 		conQuanPan.add(conSpinner);
 		
 		//add button
@@ -327,14 +413,23 @@ public class shoppingGui extends JFrame implements WindowListener {
 		conAddBtn.addActionListener(new ActionListener () {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				System.out.println("add button clicked");
+				System.out.println("consumables add button clicked");
 				try {
-				int quantity = (Integer) conSpinner.getValue(); 
+				int quantity3 = (Integer) conSpinner.getValue(); 
 				Consumables selectedConsumable = (Consumables) consumableCombo.getSelectedItem(); 
-				selectedConsumable.setQuantity(quantity); 
+				selectedConsumable.setQuantity(quantity3); 
 				cart.add(selectedConsumable); 
-				output.append(quantity +" " + selectedConsumable.getName() +  " has been added to your cart! \n");
-				}catch(Exception e1){
+				
+				if(quantity3<=0) {
+					output.append("Quantity is set to zero! Nothing added to cart \n");
+					System.out.println("nothing added to cart!");
+				} else {
+				System.out.println("cart add button clicked");
+				output.append(quantity3 +" " + selectedConsumable.getName() +  " has been added to your cart! \n");
+				PrintWriter pw3 = new PrintWriter(new FileOutputStream("cartData.txt", true));
+				pw3.println(consumableCombo.getSelectedItem() +", " + quantity3);
+				pw3.close();
+				}}catch(Exception e1){
 					e1.printStackTrace();
 				}	
 			}
@@ -360,32 +455,31 @@ public class shoppingGui extends JFrame implements WindowListener {
 	//window status
 	@Override
 	public void windowOpened(WindowEvent e) {
-		System.out.println("shoppingGUI.windowOpened()");
+
 	}
 	@Override
 	public void windowClosing(WindowEvent e) {
-		System.out.println("shoppingGUI.windowClosing()");
 		confirmExit exitframe = new confirmExit("Confirm Exit");
 		exitframe.setVisible(true);
 	}
 	@Override
 	public void windowClosed(WindowEvent e) {
-		System.out.println("shoppingGUI.windowClosed()");
+
 	}
 	@Override
 	public void windowIconified(WindowEvent e) {
-		System.out.println("shoppingGUI.windowIconified()");
+
 	}
 	@Override
 	public void windowDeiconified(WindowEvent e) {
-		System.out.println("shoppingGUI.windowDeiconified()");
+
 	}
 	@Override
 	public void windowActivated(WindowEvent e) {
-		System.out.println("shoppingGUI.windowActivated()");
+
 	}
 	@Override
 	public void windowDeactivated(WindowEvent e) {
-		System.out.println("shoppingGUI.windowDeactivated()");
+
 	}
 }
