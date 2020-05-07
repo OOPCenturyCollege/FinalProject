@@ -1,16 +1,16 @@
 package FinalPackage2;
 
-import FinalPackage1.Items;
-
 public class Clothing extends Items {
 	private double price;
 	private String name;
-
+	private int quantity;
+	
 	//constructor
-	public Clothing(String name, double price) {
-		super(name, price);
+	public Clothing(String name, double price, int quantity) {
+		super(name, price, quantity);
 		this.name = name;
 		this.price = price;
+		this.quantity = quantity;
 	}
 	
 	//getters and setters
@@ -26,11 +26,16 @@ public class Clothing extends Items {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+	public int getQuantity() {
+		return quantity;
+	}
+	public void setQuantity(int quantity) {
+		this.quantity = quantity;
+	}
+
 	
 	@Override
 	public String toString() {
-		return name + " | Price: $" + price;
+		return name + ", " + price;
 	} 
 }
-
