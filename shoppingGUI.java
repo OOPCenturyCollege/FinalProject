@@ -226,10 +226,10 @@ public class shoppingGui extends JFrame implements WindowListener {
 				System.out.println("add button clicked");
 				try {
 				int quantity = (Integer) cloSpinner.getValue(); 
-				Consumables selectedConsumable = (Consumables) consumableCombo.getSelectedItem(); 
-				selectedConsumable.setQuantity(quantity); 
-				cart.add(selectedConsumable); 
-				output.append(quantity +" " + selectedConsumable.getName() +  " has been added to your cart! \n");
+				Clothing selectedClothing = (Clothing) clothingCombo.getSelectedItem(); 
+				selectedClothing.setQuantity(quantity); 
+				cart.add(selectedClothing); 
+				output.append(quantity +" " + selectedClothing.getName() +  " has been added to your cart! \n");
 				}catch(Exception e1){
 					e1.printStackTrace();
 				}	
@@ -280,10 +280,10 @@ public class shoppingGui extends JFrame implements WindowListener {
 				System.out.println("add button clicked");
 				try {
 				int quantity = (Integer) elecSpinner.getValue(); 
-				Consumables selectedConsumable = (Consumables) consumableCombo.getSelectedItem(); 
-				selectedConsumable.setQuantity(quantity); 
-				cart.add(selectedConsumable); 
-				output.append(quantity +" " + selectedConsumable.getName() +  " has been added to your cart! \n");
+				Electronics selectedElectronic = (Electronics) electronicCombo.getSelectedItem(); 
+				selectedElectronic.setQuantity(quantity); 
+				cart.add(selectedElectronic); 
+				output.append(quantity +" " + selectedElectronic.getName() +  " has been added to your cart! \n");
 				}catch(Exception e1){
 					e1.printStackTrace();
 				}	
