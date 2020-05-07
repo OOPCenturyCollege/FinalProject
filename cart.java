@@ -1,6 +1,8 @@
 package FinalPackage1;
 
+
 public class Cart {
+	
 	private Items[] items;
 	private int itemsCount;
 
@@ -32,8 +34,8 @@ public class Cart {
 
 	@Override
 	public String toString() {
-		String info = "Cart Summary: \n";
-		double total = 0; 
+		String info = " Cart Summary \n";
+		double total = 0.00; 
 		for(int i = 0; i < itemsCount++; i++) {
 			Items item = items[i]; 
 			
@@ -42,14 +44,8 @@ public class Cart {
 			+ "\t" + item.getTotal() + "\n";
 			
 			total += item.getTotal(); 
-			
 		}
-		
-		info += "Total: " + total;
-		
+		info += " Total: $" + String.format("%.2f",total) +"\n";
 		return info; 
 	}
-
 	}
-
-
