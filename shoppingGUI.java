@@ -1,4 +1,4 @@
-package FinalPackage2;
+package FinalPackage1;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
@@ -28,6 +28,10 @@ import javax.swing.JTextArea;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+
+import FinalPackage2.Clothing;
+import FinalPackage2.Consumables;
+import FinalPackage2.Electronics;
 
 import javax.swing.border.EtchedBorder;
 import java.awt.Color;
@@ -214,9 +218,9 @@ public class shoppingGui extends JFrame implements WindowListener {
 		cartSumBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 								
-				//for (Items product : products) {
-					//output.append(product.toString() +"\n");
-				//}
+				for (Items product : products) {
+					output.append(product.toString() +"\n");
+				}
 				output.setText(" "); 
 				output.setText(cart.toString());
 			}
@@ -232,7 +236,7 @@ public class shoppingGui extends JFrame implements WindowListener {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					PrintWriter pw = new PrintWriter("cartData.txt");
-					pw.print("cleared!");
+					pw.print("");
 					pw.close();
 				} catch (FileNotFoundException e1) {
 					e1.printStackTrace();
