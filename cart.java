@@ -2,7 +2,6 @@ package FinalPackage1;
 
 
 public class Cart {
-	
 	private Items[] items;
 	private int itemsCount;
 
@@ -15,6 +14,18 @@ public class Cart {
 		items[itemsCount++] = i;
 	}
 
+	public boolean removeItem(Items r) {
+		for (int i = 0; i < itemsCount; i++) {
+			if (items[i] != null && items[i].equals(r)) {
+				items[i] = items[itemsCount - 1];
+				itemsCount--;
+				return true;
+			}
+
+		}
+
+		return false;
+	}
 
 	public Items[] getItems() {
 		return items;
@@ -34,18 +45,26 @@ public class Cart {
 
 	@Override
 	public String toString() {
-		String info = " Cart Summary \n";
-		double total = 0.00; 
-		for(int i = 0; i < itemsCount++; i++) {
+		String info = "Cart Summary: \n";
+		double total = 0; 
+		for(int i = 0; i < itemsCount; i++) {
 			Items item = items[i]; 
+			
+			double itemTotal = item.getPrice() * item.getQuantity(); 
 			
 			info += item.getName() + "\t" 
 			+ item.getPrice() + "\t" +item.getQuantity() 
-			+ "\t" + item.getTotal() + "\n";
+			+ "\t" + itemTotal + "\n";
 			
-			total += item.getTotal(); 
+			total += itemTotal; 
+			
 		}
-		info += " Total: $" + String.format("%.2f",total) +"\n";
+		
+		info += "Total: " + total;
+		
 		return info; 
 	}
+
 	}
+
+
