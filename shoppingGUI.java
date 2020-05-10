@@ -1,3 +1,14 @@
+/**
+ * Final Project 
+ * Created by Kat,Kevin, and Matt
+ * This is a simple program that lets a user shop online for clothing
+ * ,electronics, and consumables. The shop is a straight forward and 
+ * fairly easy to us. There are account info options, cart summary, clearing cart,
+ * qunatity, add cart button, and a console to see each button option. 
+ * 
+ * Due: May 10th 2020
+ * 
+ */
 package FinalPackage1;
 
 import java.awt.BorderLayout;
